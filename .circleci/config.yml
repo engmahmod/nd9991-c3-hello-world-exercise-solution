@@ -68,7 +68,7 @@ jobs:
       - run:
           name: smoke test
           command: |
-            URL="https://blog.udacity12344.com/"
+            URL="https://blog.udacity.com/"
             # Test if website exists
             if curl -s --head ${URL} 
             then
@@ -76,7 +76,8 @@ jobs:
             else
               return 1
             fi
-      - destroy_environment   
+      - destroy_environment
+ 
 # Sequential workflowf
 workflows:
   # Name the workflowld
