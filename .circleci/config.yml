@@ -17,6 +17,7 @@ commands:
            command: |
              aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
 
+
 jobs:
   create_infrastructure:   # Choose any name, such as `build`
       # The primary container, where your job's commands will run
@@ -32,7 +33,21 @@ jobs:
                 --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
                 --region us-east-1
 
-# Exercise: Config and Deployment
+  create_cloudfront:   # Choose any name, such as `build`
+      # The primary container, where your job's commands will run
+      docker:
+        - image: amazon/aws-cli
+      steps:
+        - checkout
+        - run:
+            name: Create Cloudformation Stack
+            command: |
+                aws cloudformation deploy \
+                --template-file cloudfront.yml \
+                --stack-name production-distro \
+                --parameter-overrides PipelineID="udacitycd" \ # Name of the S3 bucket you created manually.
+                --tags project=udapeople &
+# Exercise: Config and Deploymen
   configure_infrastructure: 
     docker:
       - image: python:3.7-alpine3.11
@@ -83,11 +98,12 @@ workflows:
   # Name the workflowld
   myWorkflow:
     jobs:
-      - create_infrastructure
-      - configure_infrastructure:
-          requires:
-            - create_infrastructure
-      - smoke_test:
-          requires:
-            - configure_infrastructure
-            - create_infrastructure
+      - create_cloudfront
+    #  - create_infrastructure
+    #  - configure_infrastructure:
+     #     requires:
+     #       - create_infrastructure
+     # - smoke_test:
+      #    requires:
+        #    - configure_infrastructure
+         #   - create_infrastructure
