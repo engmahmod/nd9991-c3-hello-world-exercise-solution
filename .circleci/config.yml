@@ -50,7 +50,7 @@ jobs:
             ansible-playbook -i inventory.txt main4.yml
 # Sequential workflowf
 workflows:
-  # Name the workflow
+  # Name the workflowl
   myWorkflow:
     jobs:
       - create_infrastructure
